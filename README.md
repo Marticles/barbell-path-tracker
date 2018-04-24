@@ -16,8 +16,8 @@ There are 9 different trackers you can choose to track the barbell path,includin
 ## Requirements   
      
 * OpenCV3
-* dlib
-* numpy
+* Dlib
+* Numpy
     
 ## Start Tracking    
 Firstly You need to create a bounding box around the bar(or the obeject) to be tracked.Click the left mouse button to select the bounding box.Then press <kbd>Enter</kbd> to start the tracking.If you want to close the video,just press <kbd>Esc</kbd>.I hope this simple program can help you to lift more weight.    
