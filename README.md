@@ -2,8 +2,7 @@
 ![Image](https://pic4.zhimg.com/v2-f991d9567a65c74ada7cf19c8f2d43b0_b.gif)    
 
 ![Image](https://pic4.zhimg.com/v2-221a1c9d7f34c2fbeb045041760b9804_b.jpg)        
-*Take my favourite weightlifter Lu XiaoJun as an example*
----   
+>*Take my favourite weightlifter Lu XiaoJun as an example*     
 ## Description  
         
 There are 9 different trackers you can choose to track the barbell path,including BOOSTING,MIL,KCF,TLD, MEDIANFLOW, GOTURN, Dlib_Tracker, CamShift and Template_Matching.Not only the barbell path,you can also use these trackers to track other object,like a car or anything else.Some of the comparison results are as follows.    
