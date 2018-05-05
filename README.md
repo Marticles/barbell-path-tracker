@@ -1,7 +1,8 @@
 # BarPath_Tracking
-<img src="Result/luxiaojun.gif">    
+![Image](Result/luxiaojun.gif)    
 
-<img src="Result/luxiaojun.jpg">        
+![Image](Result/luxiaojun.jpg)
+
 >*Take my favourite weightlifter Lu XiaoJun as an example*     
 ## Description  
         
