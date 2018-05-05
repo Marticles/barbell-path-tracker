@@ -1,7 +1,7 @@
 # BarPath_Tracking
-![Image](https://pic4.zhimg.com/v2-f991d9567a65c74ada7cf19c8f2d43b0_b.gif)    
+<img src="Result/luxiaojun.gif">    
 
-![Image](https://pic4.zhimg.com/v2-221a1c9d7f34c2fbeb045041760b9804_b.jpg)        
+<img src="Result/luxiaojun.jpg">        
 >*Take my favourite weightlifter Lu XiaoJun as an example*     
 ## Description  
         
