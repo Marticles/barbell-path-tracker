@@ -2,7 +2,6 @@
 [![Build Status](https://travis-ci.org/mtianyan/hexoBlog-Github.svg?branch=master)](https://travis-ci.org/mtianyan/hexoBlog-Github)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 ![](https://img.shields.io/badge/language-python-orange.svg)
-![](https://img.shields.io/cocoapods/dt/AFNetworking.svg)
 
 ![](Result/luxiaojun.gif)    
 
@@ -27,7 +26,7 @@ There are 9 different trackers you can choose to track the barbell path,includin
 * Numpy
     
 ## Start Tracking    
-Firstly You need to create a bounding box around the bar(or the obeject) to be tracked.Click the left mouse button to select the bounding box.Then press <kbd>Enter</kbd> to start the tracking.If you want to close the video,just press <kbd>Esc</kbd>.I hope this simple program can help you to lift more weight.    
+Firstly You need to create a bounding box around the bar(or the obeject) to be tracked.Click the left mouse button to select the bounding box.Then press <kbd>Enter</kbd> to start the tracking.If you want to close the video,just press <kbd>Esc</kbd>.I hope this simple program can help you to lift more weights.    
 
 
 
