@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# author: marticles
 import cv2
 import dlib
 import os
@@ -7,30 +8,29 @@ from collections import deque
 
 class pathTracker(object):
     def __init__(self, windowName = 'default window', videoName = "default video"):
-        self.selection = None                           # 框选追踪目标状态
-        self.track_window = None                        # 追踪窗口状态   
-        self.drag_start = None                          # 鼠标拖动状态
-        self.speed = 50                                 # 视频播放速度
-        self.video_size = (960,540)                     # 视频大小
-        self.box_color = (255,255,255)                  # 跟踪器外框颜色
-        self.path_color = (0,0,255)                     # 路径颜色
-        # 选择追踪器类型
+        self.selection = None
+        self.track_window = None
+        self.drag_start = None
+        self.speed = 50  
+        self.video_size = (960,540)     
+        self.box_color = (255,255,255)      
+        self.path_color = (0,0,255)
         #                          0        1     2      3         4           5            6              7              8       
         self.tracker_types = ['BOOSTING', 'MIL','KCF', 'TLD', 'MEDIANFLOW', 'GOTURN', 'Dlib_Tracker', 'CamShift','Template_Matching']
         self.tracker_type = self.tracker_types[6] 
-        # 创建视频窗口
+        # create tracker window
         cv2.namedWindow(windowName,cv2.WINDOW_AUTOSIZE)
         cv2.setMouseCallback(windowName,self.onmouse)
         self.windowName = windowName
-        # 打开视频
+        # load video
         self.cap = cv2.VideoCapture(videoName)
         if not self.cap.isOpened():
             print("Video doesn't exit!", videoName)
-        # 视频相关属性
-        self.frames_count = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT)) # 视频总帧数
-        self.points = deque(maxlen = self.frames_count) # 存放每一帧中追踪目标的中心点
+        self.frames_count = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        # store all center points for each frame
+        self.points = deque(maxlen = self.frames_count)
 
-        # 判定所选追踪器类型并初始化追踪器
+        # init tracker
         if self.tracker_type == 'BOOSTING':
             self.tracker = cv2.TrackerBoosting_create()
         elif self.tracker_type == 'MIL':
@@ -48,7 +48,7 @@ class pathTracker(object):
 
     def onmouse(self,event, x, y, flags, param):
         """
-        处理鼠标点击
+        On mouse
         """
         if event == cv2.EVENT_LBUTTONDOWN:
             self.drag_start = (x, y)
@@ -66,29 +66,30 @@ class pathTracker(object):
           
     def drawing(self,image,x,y,w,h,timer):
         """
-        实时绘制追踪器轮廓,中心点与轨迹
+        Drawing the bound, center point and path for tracker in real-time
         """
         center_point_x = int(x+ 0.5*w)
         center_point_y = int(y + 0.5*h)
         center = (center_point_x,center_point_y)
         fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer)
         self.points.appendleft(center)
-        # 绘制追踪目标外接矩形
+        # tracker's bound
         cv2.rectangle(image, (int(x),int(y)), (int(x+w),int(y+h)), self.box_color, 2)
-        # 绘制中心点
+        # center point
         cv2.circle(image, center, 2, self.path_color, -1)
-        # 绘制坐标与FPS
+        # coordinate
         cv2.putText(image,"(X=" + str(center_point_x) + ",Y=" + str(center_point_y) + ")", (int(x),int(y)),cv2.FONT_HERSHEY_SIMPLEX, 0.6, self.path_color, 2)     
+        # fps
         cv2.putText(image,"FPS=" + str(int(fps)), (40,20),cv2.FONT_HERSHEY_SIMPLEX, 0.75, self.path_color, 2)
         for i in range(1, len(self.points)):
             if self.points[i-1] is None or self.points[i] is None:
                 continue
-            # 绘制中心点轨迹
+            # path of center point
             cv2.line(image, self.points[i-1], self.points[i], self.path_color,2)
 
     def start_tracking(self):
         """
-        实现目标追踪
+        tracking!
         """
         i = 0
         for f in range(self.frames_count):
@@ -100,7 +101,7 @@ class pathTracker(object):
             print("Processing Frame {}".format(i))
             img_raw = self.frame
             image = cv2.resize(img_raw.copy(), self.video_size, interpolation = cv2.INTER_CUBIC)
-            # 只有在第一帧时才需要框选目标
+            # only need to select object on the first frame
             if i == 0: 
                 while(True):
                     img_first = image.copy()
@@ -109,13 +110,13 @@ class pathTracker(object):
                     elif self.selection:
                         cv2.rectangle(img_first, (self.selection[0],self.selection[1]), (self.selection[2], self.selection[3]), self.box_color, 1)
                     cv2.imshow(self.windowName, img_first)
-                    # Enter开始追踪
+                    # if press enter then selection is end
                     if cv2.waitKey(self.speed) == 13:
                         break
-                # 若使用Dlib
+                # Dlib
                 if self.tracker_type == 'Dlib_Tracker':
                         self.tracker.start_track(image, dlib.rectangle(self.track_window[0], self.track_window[1], self.track_window[2], self.track_window[3]))
-                # 若使用CameShift
+                # CameShift
                 elif self.tracker_type == 'CamShift':
                     tracker_box = (self.track_window[0], self.track_window[1], self.track_window[2]-self.track_window[0] , self.track_window[3]-self.track_window[1])
                     roi = image[self.track_window[1]:self.track_window[3],self.track_window[0]:self.track_window[2]]
@@ -124,27 +125,19 @@ class pathTracker(object):
                     roi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])
                     cv2.normalize(roi_hist,roi_hist,0,255,cv2.NORM_MINMAX)
                     term_crit = ( cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 )
-                # 若使用Template_Matching
+                # Template_Matching
                 elif self.tracker_type == 'Template_Matching':
-                    """
-                    1.平方差匹配 method = CV_TM_SQDIFF
-                    2.标准平方差匹配 method = CV_TM_SQDIFF_NORMED
-                    3.相关匹配 method = CV_TM_CCORR
-                    4.标准相关匹配 method = CV_TM_CCORR_NORMED
-                    5.相关匹配 method = CV_TM_CCOEFF
-                    6.标准相关匹配 method = CV_TM_CCOEFF_NORMED
-                    cv2.matchTemplate()方法严格要求模板与背景为同一数据类型(CV_8U or CV_32F)
-                    """
                     method = cv2.TM_CCOEFF_NORMED
                     template = image[self.track_window[1]:self.track_window[3],self.track_window[0]:self.track_window[2]]
                     template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY) 
                     template = template.astype(np.float32)
-                # 若使用OpenCV预置的五种追踪器
+                # Others
                 else : 
                     ret = self.tracker.init(image, (self.track_window[0], self.track_window[1], self.track_window[2]-self.track_window[0] , self.track_window[3]-self.track_window[1]))
 
-            # 框选完目标后，第一帧结束就开始追踪目标
-            # x,y为追踪框左上角点坐标；w,h为追踪框的宽度与高度
+            # start tracking at the end of the first frame
+            # (x, y) is the left-top point's postion of tracker's bound
+            # w and h is width and height of tracker's bound
             if self.tracker_type == 'Dlib_Tracker':
                 self.tracker.update(image)
                 tracker_box = self.tracker.get_position()
@@ -162,7 +155,6 @@ class pathTracker(object):
                 res = cv2.matchTemplate(gray, template, method)
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
                 w,h = template.shape[::-1]
-                # 平方差匹配CV_TM_SQDIFF与标准平方差匹配TM_SQDIFF_NORMED最佳匹配为最小值 0，匹配值越大匹配越差，其余则相反
                 if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
                     x = min_loc[0]
                     y = min_loc[1]
@@ -174,11 +166,11 @@ class pathTracker(object):
                 x,y,w,h = tracker_box
             self.drawing(image,x,y,w,h,timer)
             cv2.imshow(self.windowName,image)
-            # Esc结束
+            # if press esc
             if cv2.waitKey(self.speed) == 27:
                 break
             i += 1
-            # 保存追踪结果图像
+            # save picture
             if i == self.frames_count:
                 cv2.imwrite('Video/track_result.jpg',image)
         cv2.destroyAllWindows()
