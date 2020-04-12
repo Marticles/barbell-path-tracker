@@ -9,12 +9,19 @@
 >*Take my favourite weightlifter Lu XiaoJun as an example*     
 ## Description  
         
-There are 9 different trackers you can choose to track the barbell path, including BOOSTING, MIL,KCF, TLD, MEDIANFLOW, GOTURN, Dlib_Tracker, CamShift and Template_Matching. Not only the barbell path, you can also use these trackers to track other object, like a car or anything else.
+There are 9 different trackers you can choose to track the barbell's path, including BOOSTING, MIL, KCF, TLD, MEDIANFLOW,， GOTURN, Dlib_Tracker, CamShift and TemplateMatching. This tracker is only used to track barbell, you can also use it to track other objects, like cars or some moving objects.
     
 关于这个简单的追踪器的中文说明在这里：[(｡･ω･｡) 点我点我](http://marticles.github.io/2018/05/05/基于OpenCV与Dlib的杠铃轨迹追踪器/)
 
-## Start Tracking    
-Firstly You need to create a bounding box around the bar(or the obeject) to be tracked. Click the left mouse button to select the bounding box.Then press <kbd>Enter</kbd> to start the tracking. If you want to close the video, just press <kbd>Esc</kbd>. I hope this simple program can help you to lift more weights.   
+## Start Tracking
+
+Firstly you need to create a bounding box around the bar as the target. By clicking the left mouse button you can customize  this bounding box. Once you have set up the target, then press <kbd>Enter</kbd> to start tracking. 
+
+Use <kbd>Esc</kbd> to stop tracking. 
+
+I hope this small program can help you to lift more weights. 
+
+"Yeah buddy! Light weight baby!" 🏋
 
 ## Comparison
 The comparison results are as follows.
